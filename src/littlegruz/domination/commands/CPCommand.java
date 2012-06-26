@@ -2,6 +2,8 @@ package littlegruz.domination.commands;
 
 import littlegruz.domination.DomMain;
 import littlegruz.domination.entities.CapturePoint;
+import littlegruz.domination.permissions.PermissionHandler;
+import littlegruz.domination.permissions.PermissionNode;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,7 +19,7 @@ public class CPCommand implements CommandExecutor{
    @Override
    public boolean onCommand(CommandSender sender, Command cmd,
          String commandLabel, String[] args){
-      if(sender.hasPermission("domination.capturepoints")){
+      if(PermissionHandler.has(sender, PermissionNode.CAPTUREPOINTS)){
          /* Add capture point */
          if(cmd.getName().compareToIgnoreCase("addcapturepoint") == 0){
             if(args.length == 1){
