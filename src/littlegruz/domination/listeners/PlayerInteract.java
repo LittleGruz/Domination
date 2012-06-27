@@ -22,7 +22,7 @@ public class PlayerInteract implements Listener{
    @EventHandler
    public void onPlayerInteract(PlayerInteractEvent event){
       
-      if(event.getItem().getType().compareTo(Material.STICK) == 0){
+      if(event.getPlayer().getItemInHand().getType().compareTo(Material.STICK) == 0){
          RegionManager rm;
          ProtectedRegion region;
          Location loc;

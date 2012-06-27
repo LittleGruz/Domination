@@ -38,14 +38,15 @@ public class PlayerMove implements Listener{
       if((pr = plugin.getRegionByLocation(loc, regMan.getRegions())) != null){
          if((cp = plugin.getCapturePointMap().get(pr.getId())) != null){
             if(cp.getAttacker().compareTo("") == 0
-                  && cp.getOwner().compareToIgnoreCase(playa.getName()) != 0){
-               cp.setAttacker(playa.getName());
-               
-               //plugin.getPlayerMap().get(playa.getName()).setLastCaptureRegion(pr.getId());
-               event.getPlayer().sendMessage(cp.getName() + " is being captured!");
-
-               // TODO Change from player when parties are added
-               plugin.pointCaptureTick(cp, playa.getName(), regMan);
+                  && cp.getOwner().compareToIgnoreCase(playa.getParty()) != 0){
+               /* Check that the player is in a party */
+               if(playa.getParty().compareTo("") != 0){
+                  cp.setAttacker(playa.getParty());
+                  
+                  event.getPlayer().sendMessage(cp.getName() + " is being captured!");
+   
+                  plugin.pointCaptureTick(cp, playa, regMan);
+               }
             }
          }
       }

@@ -29,8 +29,10 @@ public class PartyCommand implements CommandExecutor{
                   plugin.getPartyMap().put(args[0], new DomParty(args[0]));
                   dp = plugin.getPartyMap().get(args[0]);
                   dp.addMember(sender.getName());
+                  plugin.getPlayerMap().get(sender.getName()).setParty(args[0]);
                   
                   sendInvite(args, dp, 1);
+                  sender.sendMessage(args[0] + " party created");
                }
                else
                   sender.sendMessage("A party with that name already exists");

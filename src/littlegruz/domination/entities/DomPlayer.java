@@ -8,11 +8,13 @@ public class DomPlayer{
    public DomPlayer(String name){
       this.name = name;
       region = "";
+      party = "";
    }
    
-   public DomPlayer(String name, String region){
+   public DomPlayer(String name, String region, String party){
       this.name = name;
       this.region = region;
+      this.party = party;
    }
    
    public String getRegion(){

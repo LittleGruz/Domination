@@ -109,7 +109,7 @@ public class DomMain extends JavaPlugin{
    }
    
    /* Sets the interval of the capturing check */
-   public void pointCaptureTick(final CapturePoint cp, final String name, final RegionManager regMan){
-      getServer().getScheduler().scheduleSyncDelayedTask(this, new CaptureTick(this, cp, name, regMan), 20L);
+   public void pointCaptureTick(final CapturePoint cp, final DomPlayer dp, final RegionManager regMan){
+      getServer().getScheduler().scheduleSyncDelayedTask(this, new CaptureTick(this, cp, dp, regMan), 20L);
    }
 }

@@ -2,6 +2,7 @@ package littlegruz.domination.runnables;
 
 import littlegruz.domination.DomMain;
 import littlegruz.domination.entities.CapturePoint;
+import littlegruz.domination.entities.DomPlayer;
 
 import org.bukkit.Location;
 
@@ -15,29 +16,28 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 public class CaptureTick implements Runnable{
    private DomMain plugin;
    private RegionManager regMan;
-   private String name;
+   private DomPlayer dp;
    private CapturePoint cp;
 
-   public CaptureTick(DomMain instance, CapturePoint cp, String name, RegionManager regMan){
+   public CaptureTick(DomMain instance, CapturePoint cp, DomPlayer dp, RegionManager regMan){
       plugin = instance;
       this.cp = cp;
-      this.name = name;
+      this.dp = dp;
       this.regMan = regMan;
    }
    
    @Override
    public void run(){
       if(regMan.getRegion(cp.getName()) != null
-            && cp.getOwner().compareToIgnoreCase(name) != 0){
+            && cp.getOwner().compareToIgnoreCase(dp.getParty()) != 0){
          Location loc;
 
-         // TODO Change from player when parties are added
-         loc = plugin.getServer().getPlayer(name).getLocation();
+         loc = plugin.getServer().getPlayer(dp.getName()).getLocation();
          loc.setY(loc.getY() - 1);
          
          /* If attacker is still in the area, do another tick */
          if(regMan.getRegion(cp.getName()).contains(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())){
-            plugin.pointCaptureTick(cp, name, regMan);
+            plugin.pointCaptureTick(cp, dp, regMan);
          }
          /* Else reset timer and stop */
          else{
@@ -56,15 +56,15 @@ public class CaptureTick implements Runnable{
             
             /* Change ownership if point is held for long enough */
             if(cp.getHealth() >= plugin.getCaptureTime()){
-               cp.setOwner(name);
+               cp.setOwner(dp.getParty());
                cp.setAttacker("");
                plugin.getServer().broadcastMessage("Capture point " + cp.getName() +
-                     " has been captured by " + name);
+                     " has been captured by " + dp.getParty());
                return;
             }
 
             plugin.getServer().broadcastMessage((plugin.getCaptureTime() - cp.getHealth()) +
-                  " seconds until " + name + " capture " + cp.getName());
+                  " seconds until " + dp.getParty() + " capture " + cp.getName());
          }
          /* If the attacking group are neutralising the owners' point */
          else{
@@ -77,10 +77,10 @@ public class CaptureTick implements Runnable{
             if(cp.getHealth() != 0){
                plugin.getServer().broadcastMessage((plugin.getCaptureTime() -
                      (plugin.getCaptureTime() - cp.getHealth())) + " seconds left until " +
-                     name + " neutralise " + cp.getName());
+                     dp.getParty() + " neutralise " + cp.getName());
             }
             else
-               plugin.getServer().broadcastMessage(name + " has neutralised " + cp.getName());
+               plugin.getServer().broadcastMessage(dp.getParty() + " have neutralised " + cp.getName());
          }
       }
    }
