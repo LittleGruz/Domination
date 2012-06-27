@@ -31,15 +31,17 @@ public class PlayerInteract implements Listener{
          loc = event.getClickedBlock().getLocation();
          region = plugin.getRegionByLocation(loc, rm.getRegions());
 
-         /* Create capture region*/
-         if(plugin.getCapturePointMap().get(region.getId()) == null){
-            plugin.getCapturePointMap().put(region.getId(), new CapturePoint(region.getId()));
-            event.getPlayer().sendMessage("Capture point set to " + region.getId());
-         }
-         /* Remove capture region*/
-         else{
-            plugin.getCapturePointMap().remove(region.getId());
-            event.getPlayer().sendMessage("Capture point " + region.getId() + " removed");
+         if(region != null){
+            /* Create capture region*/
+            if(plugin.getCapturePointMap().get(region.getId()) == null){
+               plugin.getCapturePointMap().put(region.getId(), new CapturePoint(region.getId()));
+               event.getPlayer().sendMessage("Capture point set to " + region.getId());
+            }
+            /* Remove capture region*/
+            else{
+               plugin.getCapturePointMap().remove(region.getId());
+               event.getPlayer().sendMessage("Capture point " + region.getId() + " removed");
+            }
          }
       }
    }
