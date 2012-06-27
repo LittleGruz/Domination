@@ -2,19 +2,17 @@ package littlegruz.domination.entities;
 
 public class DomPlayer{
    private String name;
+   private String party;
    private String region;
-   private String lastCaptureRegion;
    
    public DomPlayer(String name){
       this.name = name;
       region = "";
-      lastCaptureRegion = "";
    }
    
    public DomPlayer(String name, String region){
       this.name = name;
       this.region = region;
-      lastCaptureRegion = "";
    }
    
    public String getRegion(){
@@ -32,12 +30,12 @@ public class DomPlayer{
    public void setName(String name){
       this.name = name;
    }
-
-   public void setLastCaptureRegion(String lastCaptureRegion){
-      this.lastCaptureRegion = lastCaptureRegion;
+   
+   public String getParty(){
+      return party;
    }
-
-   public String getLastCaptureRegion(){
-      return lastCaptureRegion;
+   
+   public void setParty(String party){
+      this.party = party;
    }
 }

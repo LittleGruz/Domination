@@ -6,7 +6,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import littlegruz.domination.commands.CPCommand;
+import littlegruz.domination.commands.PartyCommand;
 import littlegruz.domination.entities.CapturePoint;
+import littlegruz.domination.entities.DomParty;
 import littlegruz.domination.entities.DomPlayer;
 import littlegruz.domination.listeners.PlayerConnection;
 import littlegruz.domination.listeners.PlayerInteract;
@@ -24,6 +26,7 @@ public class DomMain extends JavaPlugin{
    private WorldGuardPlugin worldGuard;
    private HashMap<String, DomPlayer> playerMap;
    private HashMap<String, CapturePoint> capturePointMap;
+   private HashMap<String, DomParty> partyMap;
    private int captureTime;
    
    public void onEnable(){
@@ -39,15 +42,23 @@ public class DomMain extends JavaPlugin{
       /* Set up HashMaps */
       playerMap = new HashMap<String, DomPlayer>();
       capturePointMap = new HashMap<String, CapturePoint>();
+      partyMap = new HashMap<String, DomParty>();
 
       /* Register listeners */
       getServer().getPluginManager().registerEvents(new PlayerMove(this), this);
       getServer().getPluginManager().registerEvents(new PlayerConnection(this), this);
       getServer().getPluginManager().registerEvents(new PlayerInteract(this), this);
 
-      /* Register commands */
+      /* Register capture point commands */
       getCommand("addcapturepoint").setExecutor(new CPCommand(this));
       getCommand("removecapturepoint").setExecutor(new CPCommand(this));
+
+      /* Register party commands */
+      getCommand("createparty").setExecutor(new PartyCommand(this));
+      getCommand("joinparty").setExecutor(new PartyCommand(this));
+      getCommand("leaveparty").setExecutor(new PartyCommand(this));
+      getCommand("sendpartyinvite").setExecutor(new PartyCommand(this));
+      getCommand("removepartyinvite").setExecutor(new PartyCommand(this));
       
       getLogger().info(this.toString() + " enabled");
    }
@@ -67,6 +78,10 @@ public class DomMain extends JavaPlugin{
 
    public HashMap<String, CapturePoint> getCapturePointMap(){
       return capturePointMap;
+   }
+
+   public HashMap<String, DomParty> getPartyMap(){
+      return partyMap;
    }
    
    public int getCaptureTime(){

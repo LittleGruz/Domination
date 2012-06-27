@@ -9,6 +9,21 @@ commands:
    removecapturepoint:
       description: Removes a region from being a capture point
       usage: /removecapturepoint <name>
+   createparty:
+      description: Create a party
+      usage: /createparty <party_name> [player_name] [player_name] ...
+   joinparty:
+      description: Join a party
+      usage: /joinparty <party_name>
+   leaveparty:
+      description: Leave the current party
+      usage: /leaveparty
+   sendpartyinvite:
+      description: Issue a party invitation to someone
+      usage: /sendpartyinvite <player_name> [player_name] [player_name] ...
+   removepartyinvite:
+      description: Remove a party invitation to someone
+      usage: /removepartyinvite <player_name> [player_name] [player_name] ...
 
 permissions:
    domination.capturepoints:
