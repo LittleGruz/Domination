@@ -18,6 +18,7 @@ public class PlayerConnection implements Listener{
    @EventHandler
    public void onPlayerJoin(PlayerJoinEvent event){
       plugin.getPlayerMap().put(event.getPlayer().getName(), new DomPlayer(event.getPlayer().getName()));
+      plugin.getRegManMap().put("world", plugin.getWorldGuard().getRegionManager(plugin.getServer().getWorld("world")));
    }
 
    @EventHandler

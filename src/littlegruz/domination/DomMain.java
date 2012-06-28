@@ -27,6 +27,7 @@ public class DomMain extends JavaPlugin{
    private HashMap<String, DomPlayer> playerMap;
    private HashMap<String, CapturePoint> capturePointMap;
    private HashMap<String, DomParty> partyMap;
+   private HashMap<String, RegionManager> regManMap;
    private int captureTime;
    
    public void onEnable(){
@@ -43,6 +44,7 @@ public class DomMain extends JavaPlugin{
       playerMap = new HashMap<String, DomPlayer>();
       capturePointMap = new HashMap<String, CapturePoint>();
       partyMap = new HashMap<String, DomParty>();
+      regManMap = new HashMap<String, RegionManager>();
 
       /* Register listeners */
       getServer().getPluginManager().registerEvents(new PlayerMove(this), this);
@@ -83,6 +85,14 @@ public class DomMain extends JavaPlugin{
    public HashMap<String, DomParty> getPartyMap(){
       return partyMap;
    }
+
+   public void setRegManMap(HashMap<String, RegionManager> regManMap){
+      this.regManMap = regManMap;
+   }
+
+   public HashMap<String, RegionManager> getRegManMap(){
+      return regManMap;
+   }
    
    public int getCaptureTime(){
       return captureTime;
@@ -111,5 +121,26 @@ public class DomMain extends JavaPlugin{
    /* Sets the interval of the capturing check */
    public void pointCaptureTick(final CapturePoint cp, final DomPlayer dp, final RegionManager regMan){
       getServer().getScheduler().scheduleSyncDelayedTask(this, new CaptureTick(this, cp, dp, regMan), 20L);
+   }
+   
+   /* Determine if a capture points owner is in its region */
+   public boolean nearbyPartyMember(CapturePoint cp, RegionManager regMan){
+      Location loc;
+      
+      if(partyMap.get(cp.getOwner()) != null){
+         /* Get all the owning party's members */
+         Iterator<Map.Entry<String, String>> it = partyMap.get(cp.getOwner()).getMembers().entrySet().iterator();
+         while(it.hasNext()){
+            Entry<String, String> player = it.next();
+            loc = getServer().getPlayer(player.getKey()).getLocation().clone();
+            loc.setY(loc.getY() - 1);
+            
+            /* Check if there is a member of the owning party on the point */
+            if(regMan.getRegion(cp.getName()).contains(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()))
+               return true;
+         }
+      }
+      
+      return false;
    }
 }

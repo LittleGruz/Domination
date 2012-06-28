@@ -32,20 +32,28 @@ public class PlayerMove implements Listener{
       
       playa = plugin.getPlayerMap().get(event.getPlayer().getName());
       
-      regMan = plugin.getWorldGuard().getRegionManager(loc.getWorld());
+      regMan = plugin.getRegManMap().get(loc.getWorld().getName());
       
       /* Point capture stuff here*/
       if((pr = plugin.getRegionByLocation(loc, regMan.getRegions())) != null){
          if((cp = plugin.getCapturePointMap().get(pr.getId())) != null){
-            if(cp.getAttacker().compareTo("") == 0
-                  && cp.getOwner().compareToIgnoreCase(playa.getParty()) != 0){
-               /* Check that the player is in a party */
-               if(playa.getParty().compareTo("") != 0){
-                  cp.setAttacker(playa.getParty());
-                  
-                  event.getPlayer().sendMessage(cp.getName() + " is being captured!");
-   
-                  plugin.pointCaptureTick(cp, playa, regMan);
+            if(cp.getAttacker().compareTo("") == 0){
+               if(cp.getOwner().compareToIgnoreCase(playa.getParty()) != 0){
+                  /* Check that the player is in a party */
+                  if(playa.getParty().compareTo("") != 0){
+                     /* Check if any defender is nearby */
+                     if(!plugin.nearbyPartyMember(cp, regMan)){
+                        cp.setAttacker(playa.getParty());
+                        
+                        event.getPlayer().sendMessage(cp.getName() + " is being captured!");
+         
+                        plugin.pointCaptureTick(cp, playa, regMan);
+                     }
+                  }
+               }
+               else{
+                  if(cp.getHealth() < plugin.getCaptureTime())
+                     cp.setHealth(plugin.getCaptureTime());
                }
             }
          }

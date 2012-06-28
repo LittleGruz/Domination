@@ -32,20 +32,21 @@ public class CaptureTick implements Runnable{
             && cp.getOwner().compareToIgnoreCase(dp.getParty()) != 0){
          Location loc;
 
-         loc = plugin.getServer().getPlayer(dp.getName()).getLocation();
+         loc = plugin.getServer().getPlayer(dp.getName()).getLocation().clone();
          loc.setY(loc.getY() - 1);
          
+         /* If there are nearby owners, then stop the capture */
+         if(plugin.nearbyPartyMember(cp, regMan)){
+            plugin.getServer().broadcastMessage("Capture of " + cp.getName() + " has been stopped");
+            cp.setAttacker("");
+            return;
+         }
          /* If attacker is still in the area, do another tick */
-         if(regMan.getRegion(cp.getName()).contains(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())){
+         else if(regMan.getRegion(cp.getName()).contains(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())){
             plugin.pointCaptureTick(cp, dp, regMan);
          }
          /* Else reset timer and stop */
          else{
-            if(cp.getOwner().compareTo("") == 0)
-               cp.setHealth(0);
-            else
-               cp.setHealth(plugin.getCaptureTime());
-            
             cp.setAttacker("");
             return;
          }
