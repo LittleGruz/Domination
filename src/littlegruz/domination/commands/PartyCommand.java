@@ -25,6 +25,10 @@ public class PartyCommand implements CommandExecutor{
             if(args.length > 0){
                if(plugin.getPartyMap().get(args[0]) == null){
                   DomParty dp;
+
+                  /* Leave old party if in one */
+                  if(plugin.getPlayerMap().get(sender.getName()).getParty().compareTo("") != 0)
+                     plugin.getServer().dispatchCommand(sender, "leaveparty");
                   
                   plugin.getPartyMap().put(args[0], new DomParty(args[0]));
                   dp = plugin.getPartyMap().get(args[0]);
@@ -48,6 +52,10 @@ public class PartyCommand implements CommandExecutor{
                dp = plugin.getPartyMap().get(args[0]);
                if(dp != null){
                   if(dp.isInvited(sender.getName())){
+                     /* Leave old party if in one */
+                     if(plugin.getPlayerMap().get(sender.getName()).getParty().compareTo("") != 0)
+                        plugin.getServer().dispatchCommand(sender, "leaveparty");
+                     
                      dp.addMember(sender.getName());
                      dp.removeInvitation(sender.getName());
                      plugin.getPlayerMap().get(sender.getName()).setParty(args[0]);
@@ -71,7 +79,7 @@ public class PartyCommand implements CommandExecutor{
                if(plugin.getPartyMap().get(party) != null){
                   plugin.getPartyMap().get(party).removeMember(sender.getName());
                   plugin.getPlayerMap().get(sender.getName()).setParty("");
-                  sender.sendMessage("You left the party");
+                  sender.sendMessage("You left party " + party);
                   
                   /* Check if the player was the last one to leave */
                   if(plugin.getPartyMap().get(party).getMembers().size() == 0){
@@ -127,12 +135,13 @@ public class PartyCommand implements CommandExecutor{
    }
    
    private void sendInvite(String[] args, DomParty dp, int i){
-      for(i = 0; i < args.length; i++){
+      while(i < args.length){
          dp.addInvitation(args[i]);
-         
+         plugin.getServer().broadcastMessage(args[i]);
          /* Send invitation message to player if they are online */
          if(plugin.getServer().getPlayer(args[i]) != null)
             plugin.getServer().getPlayer(args[i]).sendMessage("You have been invited to join " + dp.getName());
+         i++;
       }
    }
 }
