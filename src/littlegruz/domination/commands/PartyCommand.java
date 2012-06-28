@@ -19,7 +19,7 @@ public class PartyCommand implements CommandExecutor{
    @Override
    public boolean onCommand(CommandSender sender, Command cmd,
          String commandLabel, String[] args){
-      if(PermissionHandler.has(sender, PermissionNode.PARTY)){
+      if(PermissionHandler.has(sender, PermissionNode.PARTIES)){
          /* Create a party */
          if(cmd.getName().compareToIgnoreCase("createparty") == 0){
             if(args.length > 0){

@@ -21,26 +21,27 @@ public class PlayerInteract implements Listener{
 
    @EventHandler
    public void onPlayerInteract(PlayerInteractEvent event){
-      
-      if(event.getPlayer().getItemInHand().getType().compareTo(Material.STICK) == 0){
-         RegionManager rm;
-         ProtectedRegion region;
-         Location loc;
-         
-         rm = plugin.getWorldGuard().getRegionManager(event.getClickedBlock().getWorld());
-         loc = event.getClickedBlock().getLocation();
-         region = plugin.getRegionByLocation(loc, rm.getRegions());
-
-         if(region != null){
-            /* Create capture region*/
-            if(plugin.getCapturePointMap().get(region.getId()) == null){
-               plugin.getCapturePointMap().put(region.getId(), new CapturePoint(region.getId()));
-               event.getPlayer().sendMessage("Capture point set to " + region.getId());
-            }
-            /* Remove capture region*/
-            else{
-               plugin.getCapturePointMap().remove(region.getId());
-               event.getPlayer().sendMessage("Capture point " + region.getId() + " removed");
+      if(plugin.getRegManMap().get(event.getPlayer().getWorld().getName()) != null){
+         if(event.getPlayer().getItemInHand().getType().compareTo(Material.STICK) == 0){
+            RegionManager rm;
+            ProtectedRegion region;
+            Location loc;
+            
+            rm = plugin.getWorldGuard().getRegionManager(event.getClickedBlock().getWorld());
+            loc = event.getClickedBlock().getLocation();
+            region = plugin.getRegionByLocation(loc, rm.getRegions());
+   
+            if(region != null){
+               /* Create capture region*/
+               if(plugin.getCapturePointMap().get(region.getId()) == null){
+                  plugin.getCapturePointMap().put(region.getId(), new CapturePoint(region.getId()));
+                  event.getPlayer().sendMessage("Capture point set to " + region.getId());
+               }
+               /* Remove capture region*/
+               else{
+                  plugin.getCapturePointMap().remove(region.getId());
+                  event.getPlayer().sendMessage("Capture point " + region.getId() + " removed");
+               }
             }
          }
       }

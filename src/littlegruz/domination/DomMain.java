@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import littlegruz.domination.commands.CPCommand;
 import littlegruz.domination.commands.PartyCommand;
+import littlegruz.domination.commands.WorldCommand;
 import littlegruz.domination.entities.CapturePoint;
 import littlegruz.domination.entities.DomParty;
 import littlegruz.domination.entities.DomPlayer;
@@ -61,6 +62,11 @@ public class DomMain extends JavaPlugin{
       getCommand("leaveparty").setExecutor(new PartyCommand(this));
       getCommand("sendpartyinvite").setExecutor(new PartyCommand(this));
       getCommand("removepartyinvite").setExecutor(new PartyCommand(this));
+
+      /* Register world commands */
+      getCommand("adddomworld").setExecutor(new WorldCommand(this));
+      getCommand("removedomworld").setExecutor(new WorldCommand(this));
+      getCommand("displaydomworlds").setExecutor(new WorldCommand(this));
       
       getLogger().info(this.toString() + " enabled");
    }
@@ -93,7 +99,7 @@ public class DomMain extends JavaPlugin{
    public HashMap<String, RegionManager> getRegManMap(){
       return regManMap;
    }
-   
+
    public int getCaptureTime(){
       return captureTime;
    }

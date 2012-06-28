@@ -10,7 +10,6 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 
 /*TODO
  * Capturing:
- * - Stop when owners are on the point: Check for all nearby entities?
  * - Allow for non-captured points to slowly decrease health if no-one is on the point*/
 
 public class CaptureTick implements Runnable{

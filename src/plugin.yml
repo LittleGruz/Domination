@@ -1,6 +1,7 @@
 name: Domination
 main: littlegruz.domination.DomMain
 version: 0.1
+authors: [LittleGruz, Mitsugaru]
 
 commands:
    addcapturepoint:
@@ -24,10 +25,19 @@ commands:
    removepartyinvite:
       description: Remove a party invitation to someone
       usage: /removepartyinvite <player_name> [player_name] [player_name] ...
+   adddomworld:
+      description: Add a world where Domination is active
+      usage: /adddomworld [world_name]
+   removedomworld:
+      description: Remove a world where Domination is de-activated
+      usage: /removedomworld [world_name]
+   displaydomworlds:
+      description: Display the names of the worlds which have Domination active
+      usage: /displaydomworlds
 
 permissions:
    domination.capturepoints:
       description: Adding or removing capture points
       default: op
 
-depends: [WorldGuard]
+depend: [WorldGuard]

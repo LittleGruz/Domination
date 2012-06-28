@@ -2,7 +2,8 @@ package littlegruz.domination.permissions;
 
 public enum PermissionNode {
    CAPTUREPOINTS(".capturepoints"),
-   PARTY(".party"),
+   PARTIES(".parties"),
+   WORLDS(".worlds"),
    /**
     * Admin nodes
     */
