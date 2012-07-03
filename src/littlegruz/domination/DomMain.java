@@ -13,6 +13,7 @@ import littlegruz.domination.commands.WorldCommand;
 import littlegruz.domination.entities.CapturePoint;
 import littlegruz.domination.entities.DomParty;
 import littlegruz.domination.entities.DomPlayer;
+import littlegruz.domination.listeners.EntityDeath;
 import littlegruz.domination.listeners.PlayerConnection;
 import littlegruz.domination.listeners.PlayerInteract;
 import littlegruz.domination.listeners.PlayerMove;
@@ -29,6 +30,7 @@ public class DomMain extends JavaPlugin{
    private WorldGuardPlugin worldGuard;
    private HashMap<String, DomPlayer> playerMap;
    private HashMap<String, CapturePoint> capturePointMap;
+   private HashMap<String, ProtectedRegion> captureSurroundsMap;
    private HashMap<String, DomParty> partyMap;
    private HashMap<String, RegionManager> regManMap;
    private HashMap<String, Integer> scoreMap;
@@ -42,9 +44,10 @@ public class DomMain extends JavaPlugin{
       /* Set up HashMaps */
       playerMap = new HashMap<String, DomPlayer>();
       capturePointMap = new HashMap<String, CapturePoint>();
+      captureSurroundsMap = new HashMap<String, ProtectedRegion>();
       partyMap = new HashMap<String, DomParty>();
       regManMap = new HashMap<String, RegionManager>();
-      scoreMap = new HashMap<String, Integer>();
+      scoreMap = new HashMap<String, Integer>(); // The string is the party name
       pointsLegend = new ArrayList<Integer>(8);
       
       /* Get config.yml data */
@@ -54,6 +57,7 @@ public class DomMain extends JavaPlugin{
       getServer().getPluginManager().registerEvents(new PlayerMove(this), this);
       getServer().getPluginManager().registerEvents(new PlayerConnection(this), this);
       getServer().getPluginManager().registerEvents(new PlayerInteract(this), this);
+      getServer().getPluginManager().registerEvents(new EntityDeath(this), this);
 
       /* Register capture point commands */
       getCommand("addcapturepoint").setExecutor(new CPCommand(this));
@@ -89,6 +93,10 @@ public class DomMain extends JavaPlugin{
 
    public HashMap<String, CapturePoint> getCapturePointMap(){
       return capturePointMap;
+   }
+
+   public HashMap<String, ProtectedRegion> getCaptureSurroundsMap(){
+      return captureSurroundsMap;
    }
 
    public HashMap<String, DomParty> getPartyMap(){
@@ -170,6 +178,15 @@ public class DomMain extends JavaPlugin{
          getConfig().set("capture_time", 5);
       }
       
+      /* List position | Description
+       * 0 | Point capture
+       * 1 | Point neutralise
+       * 2 | Enemy kill
+       * 3 | Enemy kill in hostile region
+       * 4 | Bow kill
+       * 5 | Long range bow kill
+       * 6 | Death
+       * 7 | Suicide */ 
       if(getConfig().isList("points"))
          pointsLegend = getConfig().getIntegerList("points");
       else{
