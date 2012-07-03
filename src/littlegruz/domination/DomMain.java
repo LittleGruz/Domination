@@ -1,7 +1,9 @@
 package littlegruz.domination;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -29,23 +31,24 @@ public class DomMain extends JavaPlugin{
    private HashMap<String, CapturePoint> capturePointMap;
    private HashMap<String, DomParty> partyMap;
    private HashMap<String, RegionManager> regManMap;
+   private HashMap<String, Integer> scoreMap;
+   private List<Integer> pointsLegend;
    private int captureTime;
    
    public void onEnable(){
       /* Get the WorldGuard plugin */
       worldGuard = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
-      
-      /* Get config.yml data */
-      if(getConfig().isInt("capture_time"))
-         captureTime = getConfig().getInt("capture_time");
-      else
-         captureTime = 5;
 
       /* Set up HashMaps */
       playerMap = new HashMap<String, DomPlayer>();
       capturePointMap = new HashMap<String, CapturePoint>();
       partyMap = new HashMap<String, DomParty>();
       regManMap = new HashMap<String, RegionManager>();
+      scoreMap = new HashMap<String, Integer>();
+      pointsLegend = new ArrayList<Integer>(8);
+      
+      /* Get config.yml data */
+      loadConfig();
 
       /* Register listeners */
       getServer().getPluginManager().registerEvents(new PlayerMove(this), this);
@@ -92,6 +95,10 @@ public class DomMain extends JavaPlugin{
       return partyMap;
    }
 
+   public HashMap<String, Integer> getScoreMap(){
+      return scoreMap;
+   }
+
    public void setRegManMap(HashMap<String, RegionManager> regManMap){
       this.regManMap = regManMap;
    }
@@ -108,6 +115,10 @@ public class DomMain extends JavaPlugin{
       this.captureTime = captureTime;
    }
    
+   public List<Integer> getPointsLegend(){
+      return pointsLegend;
+   }
+
    /* Find a ProtectedRegion from a given location */
    public ProtectedRegion getRegionByLocation(Location loc, Map<String, ProtectedRegion> regionsMap){
       Iterator<Map.Entry<String, ProtectedRegion>> it = regionsMap.entrySet().iterator();
@@ -148,5 +159,30 @@ public class DomMain extends JavaPlugin{
       }
       
       return false;
+   }
+   
+   /* Load data from the config.yml file */
+   private void loadConfig(){
+      if(getConfig().isInt("capture_time"))
+         captureTime = getConfig().getInt("capture_time");
+      else{
+         captureTime = 5;
+         getConfig().set("capture_time", 5);
+      }
+      
+      if(getConfig().isList("points"))
+         pointsLegend = getConfig().getIntegerList("points");
+      else{
+         pointsLegend.add(0, 150);
+         pointsLegend.add(1, 75);
+         pointsLegend.add(2, 25);
+         pointsLegend.add(3, 40);
+         pointsLegend.add(4, 15);
+         pointsLegend.add(5, 30);
+         pointsLegend.add(6, 0);
+         pointsLegend.add(7, -100);
+         
+         getConfig().set("points", pointsLegend);
+      }
    }
 }
