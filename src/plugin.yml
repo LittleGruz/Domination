@@ -6,10 +6,16 @@ authors: [LittleGruz, Mitsugaru]
 commands:
    addcapturepoint:
       description: Sets a region to be a capture point
-      usage: /addcapturepoint <name>
+      usage: /addcapturepoint [world_name] <cp_name>
    removecapturepoint:
       description: Removes a region from being a capture point
-      usage: /removecapturepoint <name>
+      usage: /removecapturepoint <cp_name>
+   addtownship:
+      description: Sets a region to be a township
+      usage: /addtownship [world_name] <cp_name> <town_name>
+   removetownship:
+      description: Removes a region from being a township
+      usage: /removetownship <cp_name> <town_name>
    createparty:
       description: Create a party
       usage: /createparty <party_name> [player_name] [player_name] ...

@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import littlegruz.domination.commands.CPCommand;
 import littlegruz.domination.commands.PartyCommand;
+import littlegruz.domination.commands.TownCommand;
 import littlegruz.domination.commands.WorldCommand;
 import littlegruz.domination.entities.CapturePoint;
 import littlegruz.domination.entities.DomParty;
@@ -30,7 +31,6 @@ public class DomMain extends JavaPlugin{
    private WorldGuardPlugin worldGuard;
    private HashMap<String, DomPlayer> playerMap;
    private HashMap<String, CapturePoint> capturePointMap;
-   private HashMap<String, ProtectedRegion> captureSurroundsMap;
    private HashMap<String, DomParty> partyMap;
    private HashMap<String, RegionManager> regManMap;
    private HashMap<String, Integer> scoreMap;
@@ -44,7 +44,6 @@ public class DomMain extends JavaPlugin{
       /* Set up HashMaps */
       playerMap = new HashMap<String, DomPlayer>();
       capturePointMap = new HashMap<String, CapturePoint>();
-      captureSurroundsMap = new HashMap<String, ProtectedRegion>();
       partyMap = new HashMap<String, DomParty>();
       regManMap = new HashMap<String, RegionManager>();
       scoreMap = new HashMap<String, Integer>(); // The string is the party name
@@ -62,6 +61,10 @@ public class DomMain extends JavaPlugin{
       /* Register capture point commands */
       getCommand("addcapturepoint").setExecutor(new CPCommand(this));
       getCommand("removecapturepoint").setExecutor(new CPCommand(this));
+
+      /* Register township commands */
+      getCommand("addtownship").setExecutor(new TownCommand(this));
+      getCommand("removetownship").setExecutor(new TownCommand(this));
 
       /* Register party commands */
       getCommand("createparty").setExecutor(new PartyCommand(this));
@@ -93,10 +96,6 @@ public class DomMain extends JavaPlugin{
 
    public HashMap<String, CapturePoint> getCapturePointMap(){
       return capturePointMap;
-   }
-
-   public HashMap<String, ProtectedRegion> getCaptureSurroundsMap(){
-      return captureSurroundsMap;
    }
 
    public HashMap<String, DomParty> getPartyMap(){

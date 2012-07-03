@@ -4,19 +4,22 @@ public class CapturePoint{
    private String name;
    private String owner;
    private String attacker;
+   private String township;
    private int health;
    
    public CapturePoint(String name){
       this.name = name;
       owner = "";
       attacker = "";
+      township = "";
       health = 0;
    }
    
-   public CapturePoint(String name, String owner, String attacker, int health){
+   public CapturePoint(String name, String owner, String attacker, String township, int health){
       this.name = name;
       this.owner = owner;
       this.attacker = attacker;
+      this.township = township;
       this.health = health;
    }
    
@@ -34,6 +37,14 @@ public class CapturePoint{
    
    public void setOwner(String owner){
       this.owner = owner;
+   }
+   
+   public String getTownship(){
+      return township;
+   }
+   
+   public void setTownship(String township){
+      this.township = township;
    }
    
    public String getAttacker(){

@@ -8,10 +8,6 @@ import org.bukkit.Location;
 
 import com.sk89q.worldguard.protection.managers.RegionManager;
 
-/*TODO
- * Capturing:
- * - Allow for non-captured points to slowly decrease health if no-one is on the point*/
-
 public class CaptureTick implements Runnable{
    private DomMain plugin;
    private RegionManager regMan;

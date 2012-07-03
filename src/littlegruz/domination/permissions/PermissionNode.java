@@ -4,6 +4,7 @@ public enum PermissionNode {
    CAPTUREPOINTS(".capturepoints"),
    PARTIES(".parties"),
    WORLDS(".worlds"),
+   TOWNSHIPS(".townships"),
    /**
     * Admin nodes
     */
