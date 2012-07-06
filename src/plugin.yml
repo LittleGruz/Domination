@@ -40,6 +40,9 @@ commands:
    displaydomworlds:
       description: Display the names of the worlds which have Domination active
       usage: /displaydomworlds
+   domscores:
+      description: Display a descending list of the top parties
+      usage: /domscores
 
 permissions:
    domination.capturepoints:

@@ -54,6 +54,11 @@ public class CaptureTick implements Runnable{
             if(cp.getHealth() >= plugin.getCaptureTime()){
                cp.setOwner(dp.getParty());
                cp.setAttacker("");
+               
+               /* Add point capture points */
+               plugin.getScoreMap().put(dp.getParty(),
+                     plugin.getScoreMap().get(dp.getParty()) + plugin.getPointsLegend().get(0));
+               
                plugin.getServer().broadcastMessage("Capture point " + cp.getName() +
                      " has been captured by " + dp.getParty());
                return;
@@ -68,6 +73,10 @@ public class CaptureTick implements Runnable{
             
             if(cp.getHealth() <= 0){
                cp.setOwner("");
+               
+               /* Add point neutralise points */
+               plugin.getScoreMap().put(dp.getParty(),
+                     plugin.getScoreMap().get(dp.getParty()) + plugin.getPointsLegend().get(1));
             }
             
             if(cp.getHealth() != 0){

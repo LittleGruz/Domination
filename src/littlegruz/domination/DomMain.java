@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import littlegruz.domination.commands.CPCommand;
 import littlegruz.domination.commands.PartyCommand;
+import littlegruz.domination.commands.ScoreCommand;
 import littlegruz.domination.commands.TownCommand;
 import littlegruz.domination.commands.WorldCommand;
 import littlegruz.domination.entities.CapturePoint;
@@ -77,6 +78,9 @@ public class DomMain extends JavaPlugin{
       getCommand("adddomworld").setExecutor(new WorldCommand(this));
       getCommand("removedomworld").setExecutor(new WorldCommand(this));
       getCommand("displaydomworlds").setExecutor(new WorldCommand(this));
+      
+      /* Register score commands */
+      getCommand("domscores").setExecutor(new ScoreCommand(this));
       
       getLogger().info(this.toString() + " enabled");
    }

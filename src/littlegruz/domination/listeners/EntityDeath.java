@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import littlegruz.domination.DomMain;
 import littlegruz.domination.entities.CapturePoint;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,13 +31,38 @@ public class EntityDeath implements Listener{
          /* Check if victim was killed by a projectile */
          if(event.getEntity().getLastDamageCause().getCause()
                .compareTo(DamageCause.PROJECTILE) == 0){
-            /* TODO Check how far away the killer was from the victim */
+            Location loc;
+            
+            /* Determine if the victim was far enough away for a long kill */
+            loc = killa.getLocation().subtract(victim.getLocation());
+            
+            if((loc.getBlockX() > 15 && loc.getBlockX() < -15)
+                  && (loc.getBlockY() > 15 && loc.getBlockY() < -15)
+                  && (loc.getBlockZ() > 15 && loc.getBlockZ() < -15)){
+               /* Add long range bow kill points */
+               plugin.getScoreMap().put(plugin.getPlayerMap().get(killa.getName()).getParty(),
+                     plugin.getScoreMap().get(plugin.getPlayerMap().get(killa.getName()).getParty())
+                     + plugin.getPointsLegend().get(5));
+            }
+            
             addPoints(killa, victim, 4);
+         }
+         else if(event.getEntity().getLastDamageCause().getCause()
+               .compareTo(DamageCause.SUICIDE) == 0){
+            /* Add points for suicide */
+            plugin.getScoreMap().put(plugin.getPlayerMap().get(victim.getName()).getParty(),
+                  plugin.getScoreMap().get(plugin.getPlayerMap().get(victim.getName()).getParty())
+                  + plugin.getPointsLegend().get(7));
          }
          /* Check if victim was killed by anything else a user can use */
          else{
             addPoints(killa, victim, 2);
          }
+         
+         /* Add points for player death */
+         plugin.getScoreMap().put(plugin.getPlayerMap().get(victim.getName()).getParty(),
+               plugin.getScoreMap().get(plugin.getPlayerMap().get(victim.getName()).getParty())
+               + plugin.getPointsLegend().get(6));
       }
       //plugin.getServer().broadcastMessage(event.getEntity().getLastDamageCause().getCause().toString());
    }
@@ -47,10 +73,17 @@ public class EntityDeath implements Listener{
             Iterator<Map.Entry<String, CapturePoint>> it = plugin.getCapturePointMap().entrySet().iterator();
             String party = plugin.getPlayerMap().get(victim.getName()).getParty();
             
+            /* Add points for the specific kill type */
             plugin.getScoreMap().put(plugin.getPlayerMap().get(killa.getName()).getParty(),
                   plugin.getScoreMap().get(plugin.getPlayerMap().get(killa.getName()).getParty())
                   + plugin.getPointsLegend().get(type));
 
+            /* Add base kill points if the kill type is not the base score */
+            if(type != 2){
+               plugin.getScoreMap().put(plugin.getPlayerMap().get(killa.getName()).getParty(),
+                     plugin.getScoreMap().get(plugin.getPlayerMap().get(killa.getName()).getParty())
+                     + plugin.getPointsLegend().get(2));
+            }
 
             /* Check if killer killed a defender of their region */
             while(it.hasNext()){
@@ -60,6 +93,7 @@ public class EntityDeath implements Listener{
                   plugin.getScoreMap().put(plugin.getPlayerMap().get(killa.getName()).getParty(),
                         plugin.getScoreMap().get(plugin.getPlayerMap().get(killa.getName()).getParty())
                         + plugin.getPointsLegend().get(3));
+                  return;
                }
             }
          }

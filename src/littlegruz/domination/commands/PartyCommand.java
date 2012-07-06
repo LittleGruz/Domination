@@ -20,7 +20,7 @@ public class PartyCommand implements CommandExecutor{
    public boolean onCommand(CommandSender sender, Command cmd,
          String commandLabel, String[] args){
       if(PermissionHandler.has(sender, PermissionNode.PARTIES)){
-         /* Create a party */
+         /* Create a party*/
          if(cmd.getName().compareToIgnoreCase("createparty") == 0){
             if(args.length > 0){
                if(plugin.getPartyMap().get(args[0]) == null){
@@ -34,6 +34,7 @@ public class PartyCommand implements CommandExecutor{
                   dp = plugin.getPartyMap().get(args[0]);
                   dp.addMember(sender.getName());
                   plugin.getPlayerMap().get(sender.getName()).setParty(args[0]);
+                  plugin.getScoreMap().put(args[0], 0);
                   
                   sendInvite(args, dp, 1);
                   sender.sendMessage(args[0] + " party created");
@@ -81,9 +82,10 @@ public class PartyCommand implements CommandExecutor{
                   plugin.getPlayerMap().get(sender.getName()).setParty("");
                   sender.sendMessage("You left party " + party);
                   
-                  /* Check if the player was the last one to leave */
+                  /* Check if the player was the last one to leave*/
                   if(plugin.getPartyMap().get(party).getMembers().size() == 0){
                      plugin.getPartyMap().remove(party);
+                     plugin.getScoreMap().remove(party);
                      sender.sendMessage("You were the last party member. Party disbanded");
                   }
                }
