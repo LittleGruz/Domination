@@ -36,7 +36,7 @@ public class PlayerMove implements Listener{
          regMan = plugin.getRegManMap().get(loc.getWorld().getName());
          
          /* Point capture stuff here*/
-         if((pr = plugin.getRegionByLocation(loc, regMan.getRegions())) != null){
+         if((pr = plugin.getCapturePointByLocation(loc, regMan.getRegions())) != null){
             if((cp = plugin.getCapturePointMap().get(pr.getId())) != null){
                /* Check that there are no attackers */
                if(cp.getAttacker().compareTo("") == 0){

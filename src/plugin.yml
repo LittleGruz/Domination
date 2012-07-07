@@ -43,6 +43,12 @@ commands:
    domscores:
       description: Display a descending list of the top parties
       usage: /domscores
+   setcapturebuff:
+      description: Set a buff to be allocated to a township
+      usage: /setcapturebuff <cp_name> <buff_number>
+   removecapturebuff:
+      description: Remove a buff from a township
+      usage: /removecapturebuff <cp_name>
 
 permissions:
    domination.capturepoints:

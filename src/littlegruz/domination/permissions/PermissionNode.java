@@ -6,6 +6,7 @@ public enum PermissionNode {
    WORLDS(".worlds"),
    TOWNSHIPS(".townships"),
    SCORES(".scores"),
+   SPAWNS(".spawns"),
    /**
     * Admin nodes
     */

@@ -15,6 +15,7 @@ import littlegruz.domination.commands.WorldCommand;
 import littlegruz.domination.entities.CapturePoint;
 import littlegruz.domination.entities.DomParty;
 import littlegruz.domination.entities.DomPlayer;
+import littlegruz.domination.listeners.EntityDamageEntity;
 import littlegruz.domination.listeners.EntityDeath;
 import littlegruz.domination.listeners.PlayerConnection;
 import littlegruz.domination.listeners.PlayerInteract;
@@ -35,8 +36,10 @@ public class DomMain extends JavaPlugin{
    private HashMap<String, DomParty> partyMap;
    private HashMap<String, RegionManager> regManMap;
    private HashMap<String, Integer> scoreMap;
+   private HashMap<String, Location> spawnWaitMap;
    private List<Integer> pointsLegend;
    private int captureTime;
+   private String spawnPlace;
    
    public void onEnable(){
       /* Get the WorldGuard plugin */
@@ -48,7 +51,10 @@ public class DomMain extends JavaPlugin{
       partyMap = new HashMap<String, DomParty>();
       regManMap = new HashMap<String, RegionManager>();
       scoreMap = new HashMap<String, Integer>(); // The string is the party name
+      spawnWaitMap = new HashMap<String, Location>();
       pointsLegend = new ArrayList<Integer>(8);
+      
+      spawnPlace = "";
       
       /* Get config.yml data */
       loadConfig();
@@ -58,6 +64,7 @@ public class DomMain extends JavaPlugin{
       getServer().getPluginManager().registerEvents(new PlayerConnection(this), this);
       getServer().getPluginManager().registerEvents(new PlayerInteract(this), this);
       getServer().getPluginManager().registerEvents(new EntityDeath(this), this);
+      getServer().getPluginManager().registerEvents(new EntityDamageEntity(this), this);
 
       /* Register capture point commands */
       getCommand("addcapturepoint").setExecutor(new CPCommand(this));
@@ -66,6 +73,8 @@ public class DomMain extends JavaPlugin{
       /* Register township commands */
       getCommand("addtownship").setExecutor(new TownCommand(this));
       getCommand("removetownship").setExecutor(new TownCommand(this));
+      getCommand("setcapturebuff").setExecutor(new TownCommand(this));
+      getCommand("removecapturebuff").setExecutor(new TownCommand(this));
 
       /* Register party commands */
       getCommand("createparty").setExecutor(new PartyCommand(this));
@@ -110,8 +119,8 @@ public class DomMain extends JavaPlugin{
       return scoreMap;
    }
 
-   public void setRegManMap(HashMap<String, RegionManager> regManMap){
-      this.regManMap = regManMap;
+   public HashMap<String, Location> getSpawnWaitMap(){
+      return spawnWaitMap;
    }
 
    public HashMap<String, RegionManager> getRegManMap(){
@@ -130,22 +139,54 @@ public class DomMain extends JavaPlugin{
       return pointsLegend;
    }
 
-   /* Find a ProtectedRegion from a given location */
-   public ProtectedRegion getRegionByLocation(Location loc, Map<String, ProtectedRegion> regionsMap){
+   /* Find a town from a given location */
+   public ProtectedRegion getTownshipByLocation(Location loc, Map<String, ProtectedRegion> regionsMap){
       Iterator<Map.Entry<String, ProtectedRegion>> it = regionsMap.entrySet().iterator();
       
-      /* Search through every region until the desired one is reached */
+      /* Search through every region until the desired town is found */
       while(it.hasNext()){
          Entry<String, ProtectedRegion> region = it.next();
          
-         if(region.getValue().contains(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())){
-            return region.getValue();
+         Iterator<Entry<String, CapturePoint>> it2 = capturePointMap.entrySet().iterator();
+         while(it2.hasNext()){
+            Entry<String, CapturePoint> town = it2.next();
+            if(town.getValue().getTownship().compareToIgnoreCase(region.getValue().getId()) == 0
+                  && region.getValue().contains(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()))
+               return region.getValue();
+         }
+      }
+      
+      return null;
+   }
+
+   /* Find a capture point from a given location */
+   public ProtectedRegion getCapturePointByLocation(Location loc, Map<String, ProtectedRegion> regionsMap){
+      Iterator<Map.Entry<String, ProtectedRegion>> it = regionsMap.entrySet().iterator();
+      
+      /* Search through every region until the desired capture point is found */
+      while(it.hasNext()){
+         Entry<String, ProtectedRegion> region = it.next();
+         
+         Iterator<Entry<String, CapturePoint>> it2 = capturePointMap.entrySet().iterator();
+         while(it2.hasNext()){
+            Entry<String, CapturePoint> cp = it2.next();
+            if(cp.getValue().getName().compareToIgnoreCase(region.getValue().getId()) == 0
+                  && region.getValue().contains(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()))
+               return region.getValue();
          }
       }
       
       return null;
    }
    
+   public void setSpawnPlace(String spawnPlace){
+      this.spawnPlace = spawnPlace;
+   }
+
+   public String getSpawnPlace(){
+      return spawnPlace;
+   }
+
    /* Sets the interval of the capturing check */
    public void pointCaptureTick(final CapturePoint cp, final DomPlayer dp, final RegionManager regMan){
       getServer().getScheduler().scheduleSyncDelayedTask(this, new CaptureTick(this, cp, dp, regMan), 20L);

@@ -34,19 +34,17 @@ public class ScoreCommand implements CommandExecutor{
             
             sender.sendMessage("Current party rankings:");
             
-            for(i = 0; i < plugin.getScoreMap().size(); i++){
-               while(it.hasNext()){
-                  Entry<String, Integer> score = it.next();
-                  
-                  for(j = 0; j < leaderBoard.size(); j++){
-                     st = new StringTokenizer(leaderBoard.get(j), "|");
-                     /* If the score from the HashMap is smaller, continue the loop*/
-                     if(st.nextToken().compareTo(Integer.toString(score.getValue())) <= 0)
-                        break;
-                  }
-                  
-                  leaderBoard.add(j, score.getValue() + "|" + score.getKey());
+            while(it.hasNext()){
+               Entry<String, Integer> score = it.next();
+               
+               for(j = 0; j < leaderBoard.size(); j++){
+                  st = new StringTokenizer(leaderBoard.get(j), "|");
+                  /* If the score from the HashMap is smaller, continue the loop*/
+                  if(st.nextToken().compareTo(Integer.toString(score.getValue())) <= 0)
+                     break;
                }
+               
+               leaderBoard.add(j, score.getValue() + "|" + score.getKey());
             }
             
             /* Print out the top 10 scores */

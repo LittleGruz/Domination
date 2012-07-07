@@ -74,6 +74,37 @@ public class TownCommand implements CommandExecutor{
             else
                sender.sendMessage("Wrong number of arguments");
          }
+         /* Set buff to a township */
+         else if(cmd.getName().compareToIgnoreCase("setcapturebuff") == 0){
+            if(args.length == 2){
+               try{
+                  if(plugin.getCapturePointMap().get(args[0]) != null){
+                     plugin.getCapturePointMap().get(args[0]).setBuff(Integer.parseInt(args[1]));
+                     sender.sendMessage("Buff set");
+                  }
+                  else
+                     sender.sendMessage("No capture point found with that name");
+               }catch(NumberFormatException e){
+                  sender.sendMessage("Use an integer to specify the buff");
+               }
+            }
+            else
+               sender.sendMessage("Wrong number of arguments");
+         }
+         /* Remove buff from a township */
+         else if(cmd.getName().compareToIgnoreCase("removecapturebuff") == 0){
+            if(args.length == 1){
+               if(plugin.getCapturePointMap().get(args[0]) != null){
+                  plugin.getCapturePointMap().get(args[0]).setBuff(-1);
+                  sender.sendMessage("Buff removed");
+               }
+               else
+                  sender.sendMessage("No capture point found with that name");
+            }
+            else
+               sender.sendMessage("Wrong number of arguments");
+         }
+         // TODO Add a command to display which townships have which buff
          else
             return false;
       }

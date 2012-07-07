@@ -6,6 +6,7 @@ public class CapturePoint{
    private String attacker;
    private String township;
    private int health;
+   private int buff;
    
    public CapturePoint(String name){
       this.name = name;
@@ -13,14 +14,16 @@ public class CapturePoint{
       attacker = "";
       township = "";
       health = 0;
+      buff = -1;
    }
-   
-   public CapturePoint(String name, String owner, String attacker, String township, int health){
+
+   public CapturePoint(String name, String owner, String attacker, String township, int health, int buff){
       this.name = name;
       this.owner = owner;
       this.attacker = attacker;
       this.township = township;
       this.health = health;
+      this.buff = buff;
    }
    
    public String getName(){
@@ -61,5 +64,13 @@ public class CapturePoint{
    
    public void setHealth(int health){
       this.health = health;
+   }
+   
+   public int getBuff(){
+      return buff;
+   }
+
+   public void setBuff(int buff){
+      this.buff = buff;
    }
 }

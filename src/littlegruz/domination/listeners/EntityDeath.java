@@ -23,48 +23,49 @@ public class EntityDeath implements Listener{
 
    @EventHandler
    public void onEntityDeath(EntityDeathEvent event){
-      if(event.getEntity().getKiller() instanceof Player
-            && event.getEntity() instanceof Player){
-         Player victim = (Player) event.getEntity();
-         Player killa = event.getEntity().getKiller();
-
-         /* Check if victim was killed by a projectile */
-         if(event.getEntity().getLastDamageCause().getCause()
-               .compareTo(DamageCause.PROJECTILE) == 0){
-            Location loc;
-            
-            /* Determine if the victim was far enough away for a long kill */
-            loc = killa.getLocation().subtract(victim.getLocation());
-            
-            if((loc.getBlockX() > 15 && loc.getBlockX() < -15)
-                  && (loc.getBlockY() > 15 && loc.getBlockY() < -15)
-                  && (loc.getBlockZ() > 15 && loc.getBlockZ() < -15)){
-               /* Add long range bow kill points */
-               plugin.getScoreMap().put(plugin.getPlayerMap().get(killa.getName()).getParty(),
-                     plugin.getScoreMap().get(plugin.getPlayerMap().get(killa.getName()).getParty())
-                     + plugin.getPointsLegend().get(5));
+      if(plugin.getRegManMap().get(event.getEntity().getWorld().getName()) != null){
+         if(event.getEntity().getKiller() instanceof Player
+               && event.getEntity() instanceof Player){
+            Player victim = (Player) event.getEntity();
+            Player killa = event.getEntity().getKiller();
+      
+            /* Check if victim was killed by a projectile */
+            if(event.getEntity().getLastDamageCause().getCause()
+                  .compareTo(DamageCause.PROJECTILE) == 0){
+               Location loc;
+               
+               /* Determine if the victim was far enough away for a long kill */
+               loc = killa.getLocation().subtract(victim.getLocation());
+               
+               if((loc.getBlockX() > 15 && loc.getBlockX() < -15)
+                     && (loc.getBlockY() > 15 && loc.getBlockY() < -15)
+                     && (loc.getBlockZ() > 15 && loc.getBlockZ() < -15)){
+                  /* Add long range bow kill points */
+                  plugin.getScoreMap().put(plugin.getPlayerMap().get(killa.getName()).getParty(),
+                        plugin.getScoreMap().get(plugin.getPlayerMap().get(killa.getName()).getParty())
+                        + plugin.getPointsLegend().get(5));
+               }
+               
+               addPoints(killa, victim, 4);
+            }
+            else if(event.getEntity().getLastDamageCause().getCause()
+                  .compareTo(DamageCause.SUICIDE) == 0){
+               /* Add points for suicide */
+               plugin.getScoreMap().put(plugin.getPlayerMap().get(victim.getName()).getParty(),
+                     plugin.getScoreMap().get(plugin.getPlayerMap().get(victim.getName()).getParty())
+                     + plugin.getPointsLegend().get(7));
+            }
+            /* Check if victim was killed by anything else a user can use */
+            else{
+               addPoints(killa, victim, 2);
             }
             
-            addPoints(killa, victim, 4);
-         }
-         else if(event.getEntity().getLastDamageCause().getCause()
-               .compareTo(DamageCause.SUICIDE) == 0){
-            /* Add points for suicide */
+            /* Add points for player death */
             plugin.getScoreMap().put(plugin.getPlayerMap().get(victim.getName()).getParty(),
                   plugin.getScoreMap().get(plugin.getPlayerMap().get(victim.getName()).getParty())
-                  + plugin.getPointsLegend().get(7));
+                  + plugin.getPointsLegend().get(6));
          }
-         /* Check if victim was killed by anything else a user can use */
-         else{
-            addPoints(killa, victim, 2);
-         }
-         
-         /* Add points for player death */
-         plugin.getScoreMap().put(plugin.getPlayerMap().get(victim.getName()).getParty(),
-               plugin.getScoreMap().get(plugin.getPlayerMap().get(victim.getName()).getParty())
-               + plugin.getPointsLegend().get(6));
       }
-      //plugin.getServer().broadcastMessage(event.getEntity().getLastDamageCause().getCause().toString());
    }
 
    private void addPoints(Player killa, Player victim, int type){
