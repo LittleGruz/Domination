@@ -49,6 +49,15 @@ commands:
    removecapturebuff:
       description: Remove a buff from a township
       usage: /removecapturebuff <cp_name>
+   setdefaultrespawn:
+      description: Set the default respawn point
+      usage: /setdefaultrespawn
+   setrespawn:
+      description: Set a respawn for the township
+      usage: /setrespawn <town_name>
+   cancelrespawn:
+      description: Cancel placing a respawn place
+      usage: /cancelrespawn
 
 permissions:
    domination.capturepoints:

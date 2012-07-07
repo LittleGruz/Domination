@@ -8,10 +8,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-public class SpawnCommand implements CommandExecutor{
+public class RespawnCommand implements CommandExecutor{
    private DomMain plugin;
    
-   public SpawnCommand(DomMain instance){
+   public RespawnCommand(DomMain instance){
       plugin = instance;
    }
 
@@ -20,15 +20,24 @@ public class SpawnCommand implements CommandExecutor{
          String commandLabel, String[] args){
       if(PermissionHandler.has(sender, PermissionNode.SPAWNS)){
          /* Add default spawn area */
-         if(cmd.getName().compareToIgnoreCase("setdefaultspawn") == 0){
+         if(cmd.getName().compareToIgnoreCase("setdefaultrespawn") == 0){
             plugin.setSpawnPlace("default");
-            sender.sendMessage("Right click a block to make it the default spawn location");
+            sender.sendMessage("Hit a block with a stick to make it the default spawn location");
          }
          /* Add custom spawn area */
-         else if(cmd.getName().compareToIgnoreCase("setspawn") == 0){
+         else if(cmd.getName().compareToIgnoreCase("setrespawn") == 0){
             if(args.length == 1){
                plugin.setSpawnPlace(args[0]);
-               sender.sendMessage("Right click a block to make it the default spawn location");
+               sender.sendMessage("Hit a block with a stick to make it a town spawn location");
+            }
+            else
+               sender.sendMessage("Wrong number of arguments");
+         }
+         /* Cancel custom spawn placement */
+         else if(cmd.getName().compareToIgnoreCase("cancelrespawn") == 0){
+            if(args.length == 1){
+               plugin.setSpawnPlace("");
+               sender.sendMessage("Placement canceled");
             }
             else
                sender.sendMessage("Wrong number of arguments");

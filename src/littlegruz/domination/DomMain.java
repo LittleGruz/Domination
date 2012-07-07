@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import littlegruz.domination.commands.CPCommand;
 import littlegruz.domination.commands.PartyCommand;
+import littlegruz.domination.commands.RespawnCommand;
 import littlegruz.domination.commands.ScoreCommand;
 import littlegruz.domination.commands.TownCommand;
 import littlegruz.domination.commands.WorldCommand;
@@ -20,6 +21,7 @@ import littlegruz.domination.listeners.EntityDeath;
 import littlegruz.domination.listeners.PlayerConnection;
 import littlegruz.domination.listeners.PlayerInteract;
 import littlegruz.domination.listeners.PlayerMove;
+import littlegruz.domination.listeners.PlayerRespawn;
 import littlegruz.domination.runnables.CaptureTick;
 
 import org.bukkit.Location;
@@ -63,6 +65,7 @@ public class DomMain extends JavaPlugin{
       getServer().getPluginManager().registerEvents(new PlayerMove(this), this);
       getServer().getPluginManager().registerEvents(new PlayerConnection(this), this);
       getServer().getPluginManager().registerEvents(new PlayerInteract(this), this);
+      getServer().getPluginManager().registerEvents(new PlayerRespawn(this), this);
       getServer().getPluginManager().registerEvents(new EntityDeath(this), this);
       getServer().getPluginManager().registerEvents(new EntityDamageEntity(this), this);
 
@@ -90,6 +93,11 @@ public class DomMain extends JavaPlugin{
       
       /* Register score commands */
       getCommand("domscores").setExecutor(new ScoreCommand(this));
+      
+      /* Register respawn commands */
+      getCommand("setdefaultrespawn").setExecutor(new RespawnCommand(this));
+      getCommand("setrespawn").setExecutor(new RespawnCommand(this));
+      getCommand("cancelrespawn").setExecutor(new RespawnCommand(this));
       
       getLogger().info(this.toString() + " enabled");
    }
@@ -138,6 +146,14 @@ public class DomMain extends JavaPlugin{
    public List<Integer> getPointsLegend(){
       return pointsLegend;
    }
+   
+   public void setSpawnPlace(String spawnPlace){
+      this.spawnPlace = spawnPlace;
+   }
+
+   public String getSpawnPlace(){
+      return spawnPlace;
+   }
 
    /* Find a town from a given location */
    public ProtectedRegion getTownshipByLocation(Location loc, Map<String, ProtectedRegion> regionsMap){
@@ -177,14 +193,6 @@ public class DomMain extends JavaPlugin{
       }
       
       return null;
-   }
-   
-   public void setSpawnPlace(String spawnPlace){
-      this.spawnPlace = spawnPlace;
-   }
-
-   public String getSpawnPlace(){
-      return spawnPlace;
    }
 
    /* Sets the interval of the capturing check */

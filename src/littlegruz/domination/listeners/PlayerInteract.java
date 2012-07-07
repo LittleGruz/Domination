@@ -18,13 +18,13 @@ public class PlayerInteract implements Listener{
    @EventHandler
    public void onPlayerInteract(PlayerInteractEvent event){
       if(plugin.getRegManMap().get(event.getPlayer().getWorld().getName()) != null){
-         if(event.getPlayer().getItemInHand().getType().compareTo(Material.STICK) == 0){
+         if(event.getPlayer().getItemInHand().getType().compareTo(Material.STICK) == 0
+               && plugin.getSpawnPlace().compareTo("") != 0){
             Location loc;
             
             loc = event.getClickedBlock().getLocation().clone();
             loc.setY(loc.getY() + 1);
             
-            /*TODO This will need to change to include the 'respawn wait' locations */
             plugin.getSpawnWaitMap().put(plugin.getSpawnPlace(), loc);
             plugin.setSpawnPlace("");
             event.getPlayer().sendMessage("Location set");
